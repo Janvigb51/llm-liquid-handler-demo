@@ -1,0 +1,270 @@
+[
+ {
+  "id": "h01",
+  "category": "relative volume",
+  "instruction": "Transfer 100 µL from A1 to A2, then transfer half that volume from A1 to A3.",
+  "expected": "execute",
+  "reference_calls": [
+   {
+    "tool": "transfer",
+    "source_labware": "plate",
+    "source_wells": [
+     "A1"
+    ],
+    "dest_labware": "plate",
+    "dest_wells": [
+     "A2"
+    ],
+    "volume_ul": 100
+   },
+   {
+    "tool": "transfer",
+    "source_labware": "plate",
+    "source_wells": [
+     "A1"
+    ],
+    "dest_labware": "plate",
+    "dest_wells": [
+     "A3"
+    ],
+    "volume_ul": 50
+   }
+  ]
+ },
+ {
+  "id": "h02",
+  "category": "refers to earlier step",
+  "instruction": "Add 60 µL of buffer to every well in column 6. Then do the same for column 7, but with diluent.",
+  "expected": "execute",
+  "reference_calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A6",
+     "B6",
+     "C6",
+     "D6",
+     "E6",
+     "F6",
+     "G6",
+     "H6"
+    ],
+    "volume_ul": 60
+   },
+   {
+    "tool": "add_reagent",
+    "reagent": "diluent",
+    "dest_wells": [
+     "A7",
+     "B7",
+     "C7",
+     "D7",
+     "E7",
+     "F7",
+     "G7",
+     "H7"
+    ],
+    "volume_ul": 60
+   }
+  ]
+ },
+ {
+  "id": "h03",
+  "category": "unit conversion",
+  "instruction": "Add 0.1 mL of buffer to well A9.",
+  "expected": "execute",
+  "reference_calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A9"
+    ],
+    "volume_ul": 100
+   }
+  ]
+ },
+ {
+  "id": "h04",
+  "category": "pipette boundary",
+  "instruction": "Add 50 µL of buffer to well A10, then 51 µL of buffer to well B10.",
+  "expected": "execute",
+  "reference_calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A10"
+    ],
+    "volume_ul": 50
+   },
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "B10"
+    ],
+    "volume_ul": 51
+   }
+  ]
+ },
+ {
+  "id": "h05",
+  "category": "every other well",
+  "instruction": "Add 30 µL of diluent to every other well of row B, starting with B1.",
+  "expected": "execute",
+  "reference_calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "diluent",
+    "dest_wells": [
+     "B1",
+     "B3",
+     "B5",
+     "B7",
+     "B9",
+     "B11"
+    ],
+    "volume_ul": 30
+   }
+  ]
+ },
+ {
+  "id": "h06",
+  "category": "whole column mix",
+  "instruction": "Mix all the wells in column 1 five times with 80 µL.",
+  "expected": "execute",
+  "reference_calls": [
+   {
+    "tool": "mix",
+    "wells": [
+     "A1",
+     "B1",
+     "C1",
+     "D1",
+     "E1",
+     "F1",
+     "G1",
+     "H1"
+    ],
+    "repetitions": 5,
+    "volume_ul": 80
+   }
+  ]
+ },
+ {
+  "id": "h07",
+  "category": "long multi-step",
+  "instruction": "Add 100 µL of buffer to wells A11, B11 and C11. Then transfer 50 µL from each of those wells into the matching wells in column 12 (A12, B12, C12). Finally mix A12, B12 and C12 twice with 40 µL.",
+  "expected": "execute",
+  "reference_calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A11",
+     "B11",
+     "C11"
+    ],
+    "volume_ul": 100
+   },
+   {
+    "tool": "transfer",
+    "source_labware": "plate",
+    "source_wells": [
+     "A11",
+     "B11",
+     "C11"
+    ],
+    "dest_labware": "plate",
+    "dest_wells": [
+     "A12",
+     "B12",
+     "C12"
+    ],
+    "volume_ul": 50
+   },
+   {
+    "tool": "mix",
+    "wells": [
+     "A12",
+     "B12",
+     "C12"
+    ],
+    "repetitions": 2,
+    "volume_ul": 40
+   }
+  ]
+ },
+ {
+  "id": "h08",
+  "category": "reservoir to plate",
+  "instruction": "Move 120 µL from reservoir well A2 into plate wells E1 and E2.",
+  "expected": "execute",
+  "reference_calls": [
+   {
+    "tool": "transfer",
+    "source_labware": "reservoir",
+    "source_wells": [
+     "A2"
+    ],
+    "dest_labware": "plate",
+    "dest_wells": [
+     "E1",
+     "E2"
+    ],
+    "volume_ul": 120
+   }
+  ]
+ },
+ {
+  "id": "h09",
+  "category": "overflow over several steps",
+  "instruction": "Add 100 µL of buffer to well A1. Then add 100 µL of buffer to A1 again. Then add 100 µL of buffer to A1 once more.",
+  "expected": "reject",
+  "reference_calls": []
+ },
+ {
+  "id": "h10",
+  "category": "runs dry over several steps",
+  "instruction": "Transfer 100 µL from A1 to A2, then 100 µL from A1 to A3, then 100 µL from A1 to A4.",
+  "expected": "reject",
+  "reference_calls": []
+ },
+ {
+  "id": "h11",
+  "category": "unit trap",
+  "instruction": "Add 2 mL of buffer to well A5.",
+  "expected": "reject",
+  "reference_calls": []
+ },
+ {
+  "id": "h12",
+  "category": "contradiction",
+  "instruction": "Add 50 µL of buffer to column 3 and leave column 3 empty.",
+  "expected": "reject",
+  "reference_calls": []
+ },
+ {
+  "id": "h13",
+  "category": "no earlier context",
+  "instruction": "Do the same thing as before for column 5.",
+  "expected": "reject",
+  "reference_calls": []
+ },
+ {
+  "id": "h14",
+  "category": "partly unsupported",
+  "instruction": "Centrifuge the plate for 5 minutes, then add 50 µL of buffer to well A1.",
+  "expected": "reject",
+  "reference_calls": []
+ },
+ {
+  "id": "h15",
+  "category": "range past the plate",
+  "instruction": "Add 40 µL of buffer to wells A1 through A14.",
+  "expected": "reject",
+  "reference_calls": []
+ }
+]
