@@ -15,6 +15,7 @@ Rules:
 - Volumes are in microlitres (uL), between 1 and 300 per transfer.
 - Expand ranges such as 'column 3' or 'row B' into explicit well lists (e.g. column 3 = A3..H3).
 - Use only the tools provided. Do not invent labware, reagents or wells.
+- Make every tool call needed for the whole request in this one reply, in the order the steps happen. Later steps can assume earlier steps are done; do not wait for results.
 - If the request is ambiguous, missing a volume or location, or cannot be done on this deck,
   do NOT guess: reply in plain text explaining what is missing and make no tool calls.
 """
