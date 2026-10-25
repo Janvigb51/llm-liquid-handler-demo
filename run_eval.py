@@ -35,12 +35,19 @@ def reference_state(case):
     return validate(case["reference_calls"]).final_state if case["reference_calls"] else initial_state()
 
 
-def run_case(case, backend, simulate, model):
+def run_case(case, backend, simulate, model, retry=False):
     rec = {"id": case["id"], "category": case["category"], "expected": case["expected"],
            "instruction": case["instruction"]}
     if backend == "llm":
         from labbot.llm import instruction_to_calls
         calls, text = instruction_to_calls(case["instruction"], model=model)
+        rec["retried"] = False
+        if retry and calls:
+            first = validate(calls)
+            if not first.ok:
+                from labbot.llm import retry_with_feedback
+                rec.update(retried=True, first_calls=calls, first_errors=first.errors)
+                calls, text = retry_with_feedback(case["instruction"], calls, first.errors, model=model)
     else:
         calls, text = case["reference_calls"], ""
     rec.update(calls=calls, llm_text=text, parsed=bool(calls))
@@ -93,6 +100,8 @@ def summarise(records):
     if any(r["simulated"] for r in records):
         ran = [r for r in execute if r["simulated"]]
         lines.append(f"| Executable requests: simulated without errors | {pct(sum(r['simulated'] == 'ok' for r in ran), len(ran))} |")
+    if any(r.get("retried") for r in records):
+        lines.append(f"| Cases where the validator's errors were sent back for a retry | {sum(bool(r.get('retried')) for r in records)} |")
     lines += ["", "Failure/outcome breakdown:", ""]
     for outcome, n in Counter(r["outcome"] for r in records).most_common():
         lines.append(f"- {outcome}: {n}")
@@ -104,12 +113,14 @@ def main():
     ap.add_argument("--backend", choices=["llm", "reference"], default="llm")
     ap.add_argument("--simulate", action="store_true", help="also run the Opentrons simulator")
     ap.add_argument("--model", default=None)
+    ap.add_argument("--retry", action="store_true",
+                    help="if the validator rejects the calls, send its errors back to the model once")
     ap.add_argument("--cases", default=str(ROOT / "data" / "instructions.json"))
     ap.add_argument("--out", default=str(ROOT / "results"))
     args = ap.parse_args()
 
     cases = json.loads(Path(args.cases).read_text())
-    records = [run_case(c, args.backend, args.simulate, args.model) for c in cases]
+    records = [run_case(c, args.backend, args.simulate, args.model, args.retry) for c in cases]
 
     out = Path(args.out)
     out.mkdir(exist_ok=True)
