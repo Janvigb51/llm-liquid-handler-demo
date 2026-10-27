@@ -93,6 +93,7 @@ ran in the Opentrons simulator without errors.
 | Sonnet, first prompt | 1 | 15/16 | 10/10 | 0 |
 | Sonnet, prompt + "make all tool calls in one reply" | 3 | 16/16 in each run | 10/10 in each run | 2 per run (r05, r10) |
 | Haiku, same prompt | 1 | 16/16 | 10/10 | 0 |
+| Haiku + retry with validator feedback | 3 | 16/16, 16/16, 15/16 | 10/10 in each run | 0 (first attempt rejected and retried: 0, 1, 0) |
 
 **Harder set (15 instructions)**
 
@@ -117,14 +118,15 @@ ran in the Opentrons simulator without errors.
    larger model reasoned through both correctly in every run.
 4. **The validator is a backstop, not the main safeguard, with a strong model.** On the harder set the larger
    model needed it zero times. With the smaller model it caught 1-2 cases per run.
-5. **Sending the validator's errors back for one retry worked on every case it was tried on.** In 4 of 4
+5. **Sending the validator's errors back for one retry worked on every case it was tried on.** In 5 of 5
    rejected first attempts the model declined correctly after seeing the error, and explained the
    arithmetic. If the model had instead quietly shortened the request, the harness would count that as
    a failure; that did not happen.
+6. **The prompt fix reduced the problem but did not remove it.** With Haiku, the model stopped after the first tool call once in three runs (v13). The validator cannot detect this, because a partial plan is still a valid plan; catching it would need a completeness check.
 
 ### How far to trust this
 
-The test sets are small and written by me, each setup was run 1-3 times, and the retry result is 4 cases
+The test sets are small and written by me, each setup was run 1-3 times, and the retry result is 5 cases
 from one model on one test set. These are observations about failure modes, not statistics, and runs are
 not paired (the with-retry and without-retry numbers come from separate runs). The first-prompt baseline
 is a single run.
@@ -141,7 +143,7 @@ is a single run.
 - **The validator encodes the rules I thought of.** Anything it does not check can still slip through.
 - **Error messages for one-to-many transfers** report the step but not which destination well failed.
 - **Volumes are idealised.** No evaporation, dead volume or pipetting error is modelled.
-
+- **The validator checks feasibility, not completeness or intent.** A plan that stops early, or does something valid but different from what was asked, still passes.
 ## Ideas for extending it
 
 - Add more tools (incubate, shake, centrifuge) and labware, and let the LLM choose the deck layout.
