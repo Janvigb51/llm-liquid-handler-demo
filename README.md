@@ -92,7 +92,7 @@ ran in the Opentrons simulator without errors.
 |---|---|---|---|---|
 | Sonnet, first prompt | 1 | 15/16 | 10/10 | 0 |
 | Sonnet, prompt + "make all tool calls in one reply" | 3 | 16/16 in each run | 10/10 in each run | 2 per run (r05, r10) |
-| Haiku, same prompt | 1 | 16/16 | 10/10 | 0 |
+| Haiku, same prompt | 4 | 16/16, 15/16, 13/16, 16/16 | 10/10 in each run | 0 |
 | Haiku + retry with validator feedback | 3 | 16/16, 16/16, 15/16 | 10/10 in each run | 0 (first attempt rejected and retried: 0, 1, 0) |
 
 **Harder set (15 instructions)**
@@ -107,7 +107,7 @@ ran in the Opentrons simulator without errors.
 
 1. **The first failure was a prompt problem, not a model problem.** In the first run the model made only the
    first tool call of a multi-step request and waited for a result. One added line in the system prompt
-   ("make every tool call needed for the whole request in this one reply") fixed it in all later runs.
+   ("make every tool call needed for the whole request in this one reply") fixed it in all later Sonnet runs, but not reliably for the smaller model (see finding 6)
 2. **That fix had a side effect.** The model became more willing to act, and attempted two requests that
    cannot work physically (r05, r10). The validator blocked them in all three runs. Fixing one failure
    can expose another, which is why the checks sit outside the model.
@@ -122,11 +122,17 @@ ran in the Opentrons simulator without errors.
    rejected first attempts the model declined correctly after seeing the error, and explained the
    arithmetic. If the model had instead quietly shortened the request, the harness would count that as
    a failure; that did not happen.
-6. **The prompt fix reduced the problem but did not remove it.** With Haiku, the model stopped after the first tool call once in three runs (v13). The validator cannot detect this, because a partial plan is still a valid plan; catching it would need a completeness check.
+6. **The prompt fix reduced the problem but did not remove it.** With Haiku, the model made only
+   some of the steps in 3 of 7 runs on the original set (4 cases: v13 three times, v08 once). The
+   validator cannot detect this, because a partial plan is still a valid plan; catching it would
+   need a completeness check. Sonnet did not do this in any run after the prompt change.
+7. **Declining is not always correct.** In one run Haiku declined a valid request (v16, mix A1 and
+   B1), saying B1 was empty, although B1 is in column 1, which holds sample. A false refusal is
+   safe but still counts as a failure in the harness.
 
 ### How far to trust this
 
-The test sets are small and written by me, each setup was run 1-3 times, and the retry result is 5 cases
+The test sets are small and written by me, each setup was run 1-4 times, and the retry result is 5 cases
 from one model on one test set. These are observations about failure modes, not statistics, and runs are
 not paired (the with-retry and without-retry numbers come from separate runs). The first-prompt baseline
 is a single run.
