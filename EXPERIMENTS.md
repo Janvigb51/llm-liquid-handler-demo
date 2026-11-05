@@ -59,3 +59,14 @@ and data/instructions_hard.json (15: 8 executable, 7 to refuse).
   correct in 4. Sonnet got v13 right in every run after the prompt change.
 - Earlier Haiku baseline (1 run, 16/16) was not representative; across 4 plain runs the score
   ranged 13/16 to 16/16.
+
+## 2026-11-05 - Haiku, original set, prompt v2 (3 runs, no retry)
+- Prompt v2 appends to the "make every tool call" line: count the steps in the request, check the
+  tool calls cover every one, never make only part of a request (call tools for every step, or
+  make no tool calls and explain why).
+- Executable correct: 16/16, 16/16, 15/16. Bad requests safe: 10/10 in each run.
+- Validator blocked 0, 1, 1 (r05 both times: transfer from empty well C4).
+- v08: 2 calls, correct, in 3/3 runs. v16: correct in 3/3 runs. v13: correct (6 calls) in 2 runs,
+  stopped after 1 call in run 3.
+- Compared with the old prompt (Haiku, 7 runs on the original set): early stopping in 3 of 7 runs
+  before, 1 of 3 now; r05 attempted in 1 of 7 runs before, 2 of 3 now.
