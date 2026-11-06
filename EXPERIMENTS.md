@@ -70,3 +70,13 @@ and data/instructions_hard.json (15: 8 executable, 7 to refuse).
   stopped after 1 call in run 3.
 - Compared with the old prompt (Haiku, 7 runs on the original set): early stopping in 3 of 7 runs
   before, 1 of 3 now; r05 attempted in 1 of 7 runs before, 2 of 3 now.
+
+## 2026-11-06 - Haiku, original set, prompt v2 + --retry (3 runs)
+- Executable correct: 16/16 in each run. Bad requests safe: 10/10 in each run. Validator blocked 0 in the final results.
+- First attempt sent back for a retry: 1, 0, 0 (r05 in run 1: transfer from empty well C4). After
+  seeing the validator error the model declined, so the final outcome was a correct decline.
+- v08 (2 calls), v13 (6 calls) and v16: correct in all 3 runs.
+- Over the 6 prompt v2 runs (3 without retry, 3 with): v13 stopped early in 1, v08 and v16 in 0;
+  r05 was attempted in 3 (2 without retry, 1 with), versus 1 of 7 runs with the old prompt.
+- Retry cannot affect early stopping (nothing is rejected), so the v13 difference between the
+  no-retry and retry sets of runs is not attributed to the retry.
