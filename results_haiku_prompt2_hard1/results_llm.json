@@ -1,0 +1,433 @@
+[
+ {
+  "id": "h01",
+  "category": "relative volume",
+  "expected": "execute",
+  "instruction": "Transfer 100 µL from A1 to A2, then transfer half that volume from A1 to A3.",
+  "retried": false,
+  "calls": [
+   {
+    "tool": "transfer",
+    "source_labware": "plate",
+    "source_wells": [
+     "A1"
+    ],
+    "dest_labware": "plate",
+    "dest_wells": [
+     "A2"
+    ],
+    "volume_ul": 100
+   },
+   {
+    "tool": "transfer",
+    "source_labware": "plate",
+    "source_wells": [
+     "A1"
+    ],
+    "dest_labware": "plate",
+    "dest_wells": [
+     "A3"
+    ],
+    "volume_ul": 50
+   }
+  ],
+  "llm_text": "",
+  "parsed": true,
+  "valid": true,
+  "errors": [],
+  "state_match": true,
+  "simulated": "ok",
+  "success": true,
+  "outcome": "correct"
+ },
+ {
+  "id": "h02",
+  "category": "refers to earlier step",
+  "expected": "execute",
+  "instruction": "Add 60 µL of buffer to every well in column 6. Then do the same for column 7, but with diluent.",
+  "retried": false,
+  "calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A6",
+     "B6",
+     "C6",
+     "D6",
+     "E6",
+     "F6",
+     "G6",
+     "H6"
+    ],
+    "volume_ul": 60
+   },
+   {
+    "tool": "add_reagent",
+    "reagent": "diluent",
+    "dest_wells": [
+     "A7",
+     "B7",
+     "C7",
+     "D7",
+     "E7",
+     "F7",
+     "G7",
+     "H7"
+    ],
+    "volume_ul": 60
+   }
+  ],
+  "llm_text": "",
+  "parsed": true,
+  "valid": true,
+  "errors": [],
+  "state_match": true,
+  "simulated": "ok",
+  "success": true,
+  "outcome": "correct"
+ },
+ {
+  "id": "h03",
+  "category": "unit conversion",
+  "expected": "execute",
+  "instruction": "Add 0.1 mL of buffer to well A9.",
+  "retried": false,
+  "calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A9"
+    ],
+    "volume_ul": 100
+   }
+  ],
+  "llm_text": "",
+  "parsed": true,
+  "valid": true,
+  "errors": [],
+  "state_match": true,
+  "simulated": "ok",
+  "success": true,
+  "outcome": "correct"
+ },
+ {
+  "id": "h04",
+  "category": "pipette boundary",
+  "expected": "execute",
+  "instruction": "Add 50 µL of buffer to well A10, then 51 µL of buffer to well B10.",
+  "retried": false,
+  "calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A10"
+    ],
+    "volume_ul": 50
+   },
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "B10"
+    ],
+    "volume_ul": 51
+   }
+  ],
+  "llm_text": "",
+  "parsed": true,
+  "valid": true,
+  "errors": [],
+  "state_match": true,
+  "simulated": "ok",
+  "success": true,
+  "outcome": "correct"
+ },
+ {
+  "id": "h05",
+  "category": "every other well",
+  "expected": "execute",
+  "instruction": "Add 30 µL of diluent to every other well of row B, starting with B1.",
+  "retried": false,
+  "calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "diluent",
+    "dest_wells": [
+     "B1",
+     "B3",
+     "B5",
+     "B7",
+     "B9",
+     "B11"
+    ],
+    "volume_ul": 30
+   }
+  ],
+  "llm_text": "",
+  "parsed": true,
+  "valid": true,
+  "errors": [],
+  "state_match": true,
+  "simulated": "ok",
+  "success": true,
+  "outcome": "correct"
+ },
+ {
+  "id": "h06",
+  "category": "whole column mix",
+  "expected": "execute",
+  "instruction": "Mix all the wells in column 1 five times with 80 µL.",
+  "retried": false,
+  "calls": [
+   {
+    "tool": "mix",
+    "wells": [
+     "A1",
+     "B1",
+     "C1",
+     "D1",
+     "E1",
+     "F1",
+     "G1",
+     "H1"
+    ],
+    "repetitions": 5,
+    "volume_ul": 80
+   }
+  ],
+  "llm_text": "",
+  "parsed": true,
+  "valid": true,
+  "errors": [],
+  "state_match": true,
+  "simulated": "ok",
+  "success": true,
+  "outcome": "correct"
+ },
+ {
+  "id": "h07",
+  "category": "long multi-step",
+  "expected": "execute",
+  "instruction": "Add 100 µL of buffer to wells A11, B11 and C11. Then transfer 50 µL from each of those wells into the matching wells in column 12 (A12, B12, C12). Finally mix A12, B12 and C12 twice with 40 µL.",
+  "retried": false,
+  "calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A11",
+     "B11",
+     "C11"
+    ],
+    "volume_ul": 100
+   },
+   {
+    "tool": "transfer",
+    "source_labware": "plate",
+    "source_wells": [
+     "A11",
+     "B11",
+     "C11"
+    ],
+    "dest_labware": "plate",
+    "dest_wells": [
+     "A12",
+     "B12",
+     "C12"
+    ],
+    "volume_ul": 50
+   },
+   {
+    "tool": "mix",
+    "wells": [
+     "A12",
+     "B12",
+     "C12"
+    ],
+    "repetitions": 2,
+    "volume_ul": 40
+   }
+  ],
+  "llm_text": "",
+  "parsed": true,
+  "valid": true,
+  "errors": [],
+  "state_match": true,
+  "simulated": "ok",
+  "success": true,
+  "outcome": "correct"
+ },
+ {
+  "id": "h08",
+  "category": "reservoir to plate",
+  "expected": "execute",
+  "instruction": "Move 120 µL from reservoir well A2 into plate wells E1 and E2.",
+  "retried": false,
+  "calls": [
+   {
+    "tool": "transfer",
+    "source_labware": "reservoir",
+    "source_wells": [
+     "A2"
+    ],
+    "dest_labware": "plate",
+    "dest_wells": [
+     "E1",
+     "E2"
+    ],
+    "volume_ul": 120
+   }
+  ],
+  "llm_text": "",
+  "parsed": true,
+  "valid": true,
+  "errors": [],
+  "state_match": true,
+  "simulated": "ok",
+  "success": true,
+  "outcome": "correct"
+ },
+ {
+  "id": "h09",
+  "category": "overflow over several steps",
+  "expected": "reject",
+  "instruction": "Add 100 µL of buffer to well A1. Then add 100 µL of buffer to A1 again. Then add 100 µL of buffer to A1 once more.",
+  "retried": false,
+  "calls": [
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A1"
+    ],
+    "volume_ul": 100
+   },
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A1"
+    ],
+    "volume_ul": 100
+   },
+   {
+    "tool": "add_reagent",
+    "reagent": "buffer",
+    "dest_wells": [
+     "A1"
+    ],
+    "volume_ul": 100
+   }
+  ],
+  "llm_text": "",
+  "parsed": true,
+  "valid": false,
+  "errors": [
+   "step 2: plate A1 would hold 400 uL (max 360)",
+   "step 3: plate A1 would hold 500 uL (max 360)"
+  ],
+  "state_match": null,
+  "simulated": null,
+  "success": true,
+  "outcome": "blocked by validator"
+ },
+ {
+  "id": "h10",
+  "category": "runs dry over several steps",
+  "expected": "reject",
+  "instruction": "Transfer 100 µL from A1 to A2, then 100 µL from A1 to A3, then 100 µL from A1 to A4.",
+  "retried": false,
+  "calls": [],
+  "llm_text": "I haven't run any transfers because the request can't be completed as written. Well A1 holds 200 µL, but the three transfers total 300 µL (3 × 100 µL). After two transfers, A1 would be empty, so the third transfer to A4 would fail.\n\nHow would you like to proceed? For example:\n- Transfer 100 µL from A1 to A2 and 100 µL from A1 to A3, leaving A4 empty.\n- Transfer 100 µL from A1 to each of A2, A3, and A4, but with a smaller volume (for example, 66 µL each, which totals 200 µL).\n- Use a different source well for the third transfer, though all other wells in column 1 also hold 200 µL, so A1 is the only well that isn't already in use.",
+  "parsed": false,
+  "valid": null,
+  "errors": [],
+  "state_match": null,
+  "simulated": null,
+  "success": true,
+  "outcome": "declined"
+ },
+ {
+  "id": "h11",
+  "category": "unit trap",
+  "expected": "reject",
+  "instruction": "Add 2 mL of buffer to well A5.",
+  "retried": false,
+  "calls": [],
+  "llm_text": "I can't do this as requested. Well A5 holds a maximum of 360 µL, so 2 mL (2000 µL) of buffer won't fit. The dispensing tool also accepts only 1–300 µL per transfer.\n\nWould you like a different volume? For example, up to 300 µL of buffer could go into A5 in one transfer. If you need 2 mL total, it would have to be split across several wells, each under 360 µL. Tell me the volume and well(s) you want, and I'll set it up.",
+  "parsed": false,
+  "valid": null,
+  "errors": [],
+  "state_match": null,
+  "simulated": null,
+  "success": true,
+  "outcome": "declined"
+ },
+ {
+  "id": "h12",
+  "category": "contradiction",
+  "expected": "reject",
+  "instruction": "Add 50 µL of buffer to column 3 and leave column 3 empty.",
+  "retried": false,
+  "calls": [],
+  "llm_text": "I can't do this as written because the two parts contradict each other. Adding 50 µL of buffer to column 3 would leave those wells with liquid, so column 3 can't also be left empty. I haven't made any tool calls. Which did you mean?\n\n1. **Add buffer to column 3:** dispense 50 µL of buffer into A3–H3 (8 wells, 400 µL total from the reservoir well A1).\n2. **Leave column 3 empty:** make no changes to column 3. If you meant a different column for the buffer, tell me which one.",
+  "parsed": false,
+  "valid": null,
+  "errors": [],
+  "state_match": null,
+  "simulated": null,
+  "success": true,
+  "outcome": "declined"
+ },
+ {
+  "id": "h13",
+  "category": "no earlier context",
+  "expected": "reject",
+  "instruction": "Do the same thing as before for column 5.",
+  "retried": false,
+  "calls": [],
+  "llm_text": "I can't tell what to do for column 5 because I don't have a record of an earlier request in this conversation. Could you describe the operation you want? For example, the source and destination, the volume, and whether it involves buffer or diluent. Once I have those details, I'll run it on column 5.",
+  "parsed": false,
+  "valid": null,
+  "errors": [],
+  "state_match": null,
+  "simulated": null,
+  "success": true,
+  "outcome": "declined"
+ },
+ {
+  "id": "h14",
+  "category": "partly unsupported",
+  "expected": "reject",
+  "instruction": "Centrifuge the plate for 5 minutes, then add 50 µL of buffer to well A1.",
+  "retried": false,
+  "calls": [],
+  "llm_text": "I can't do this request because the robot has no centrifuge. I can only transfer liquids, dispense buffer or diluent, and mix wells. Since the first step can't be done, I haven't run the buffer addition either, so nothing has been changed on the plate.\n\nIf you can spin the plate in a separate centrifuge, I can add 50 µL of buffer to well A1 afterward. Or, if you want the buffer added without centrifuging first, tell me and I'll do that.",
+  "parsed": false,
+  "valid": null,
+  "errors": [],
+  "state_match": null,
+  "simulated": null,
+  "success": true,
+  "outcome": "declined"
+ },
+ {
+  "id": "h15",
+  "category": "range past the plate",
+  "expected": "reject",
+  "instruction": "Add 40 µL of buffer to wells A1 through A14.",
+  "retried": false,
+  "calls": [],
+  "llm_text": "I can't run this as written because the plate has no wells A13 or A14. Row A runs from A1 to A12 only. I haven't dispensed anything.\n\nDid you mean:\n- **A1 through A12** (all 12 wells in row A), or\n- A different set of wells, such as column 14 or another range?\n\nOnce you confirm, I'll add 40 µL of buffer to the wells you specify.",
+  "parsed": false,
+  "valid": null,
+  "errors": [],
+  "state_match": null,
+  "simulated": null,
+  "success": true,
+  "outcome": "declined"
+ }
+]
