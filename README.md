@@ -96,6 +96,7 @@ cover every one with a tool call, and never make only part of a request.
 | Haiku, same prompt | 4 | 16/16, 15/16, 13/16, 16/16 | 10/10 in each run | 0 |
 | Haiku + retry with validator feedback | 3 | 16/16, 16/16, 15/16 | 10/10 in each run | 0 (first attempt rejected and retried: 0, 1, 0) |
 | Haiku, prompt v2 (cover every step or make no calls) | 3 | 16/16, 16/16, 15/16 | 10/10 in each run | 0, 1, 1 (r05 both times) |
+| Haiku, prompt v2 + retry with validator feedback | 3 | 16/16 in each run | 10/10 in each run | 0 (first attempt rejected and retried: 1, 0, 0) |
 
 **Harder set (15 instructions)**
 
@@ -120,7 +121,7 @@ cover every one with a tool call, and never make only part of a request.
    larger model reasoned through both correctly in every run.
 4. **The validator is a backstop, not the main safeguard, with a strong model.** On the harder set the larger
    model needed it zero times. With the smaller model it caught 1-2 cases per run.
-5. **Sending the validator's errors back for one retry worked on every case it was tried on.** In 5 of 5
+5. **Sending the validator's errors back for one retry worked on every case it was tried on.** In 6 of 6
    rejected first attempts the model declined correctly after seeing the error, and explained the
    arithmetic. If the model had instead quietly shortened the request, the harness would count that as
    a failure; that did not happen.
@@ -134,11 +135,12 @@ cover every one with a tool call, and never make only part of a request.
 8. **A stronger prompt reduced early stopping but made the smaller model act more readily.** With
    prompt v2, Haiku stopped early once in 3 runs (down from 3 of 7), but attempted the empty-well
    request r05 in 2 of 3 runs (up from 1 of 7). The validator blocked both attempts. With only
-   a few runs this is a lead, not a conclusion.
+   a few runs this is a lead, not a conclusion. With the retry added on top, all three runs scored 16/16 
+   correct and 10/10 safe; the one r05 attempt was sent back and declined.
 
 ### How far to trust this
 
-The test sets are small and written by me, each setup was run 1-4 times, and the retry result is 5 cases
+The test sets are small and written by me, each setup was run 1-4 times, and the retry result is 6 cases
 from one model on one test set. These are observations about failure modes, not statistics, and runs are
 not paired (the with-retry and without-retry numbers come from separate runs). The first-prompt baseline
 is a single run.
