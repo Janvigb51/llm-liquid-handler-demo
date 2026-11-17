@@ -108,12 +108,14 @@ cover every one with a tool call, and never make only part of a request.
 | Haiku + retry with validator feedback | 3 | 8/8 in each run | 7/7 in each run | 0 (first attempt rejected and retried: 1, 1, 2) |
 | Haiku, prompt v2 | 3 | 8/8 in each run | 7/7 in each run | 1, 1, 2 (h09 in 3/3 runs, h10 in 1/3) |
 | Sonnet, prompt v2 | 2 | 8/8 in each run | 7/7 in each run | 0 |
+| Haiku, prompt v2, retry | 8/8, 8/8, 7/8 | 7/7 in all runs | h09 retried in all runs and declined; one miss was h08, where the model asked a clarifying question
 
 ### What I found
 
 1. **The first failure was a prompt problem, not a model problem.** In the first run the model made only the
    first tool call of a multi-step request and waited for a result. One added line in the system prompt
-   ("make every tool call needed for the whole request in this one reply") fixed it in all later Sonnet runs, but not reliably for the smaller model (see finding 6)
+   ("make every tool call needed for the whole request in this one reply") fixed it in all later Sonnet runs,
+   but not reliably for the smaller model (see finding 6)
 2. **That fix had a side effect.** The model became more willing to act, and attempted two requests that
    cannot work physically (r05, r10). The validator blocked them in all three runs. Fixing one failure
    can expose another, which is why the checks sit outside the model.
@@ -124,7 +126,7 @@ cover every one with a tool call, and never make only part of a request.
    larger model reasoned through both correctly in every run.
 4. **The validator is a backstop, not the main safeguard, with a strong model.** On the harder set the larger
    model needed it zero times. With the smaller model it caught 1-2 cases per run.
-5. **Sending the validator's errors back for one retry worked on every case it was tried on.** In 6 of 6
+5. **Sending the validator's errors back for one retry worked on every case it was tried on.** In 9 of 9
    rejected first attempts the model declined correctly after seeing the error, and explained the
    arithmetic. If the model had instead quietly shortened the request, the harness would count that as
    a failure; that did not happen.
@@ -144,7 +146,8 @@ cover every one with a tool call, and never make only part of a request.
 9. **Different failures need different fixes.** Prompt v2 reduced early stopping, but did not change
    the state-tracking mistakes on the harder set: Haiku still attempted h09 in 3 of 3 runs (h10 in
    1 of 3, previously 2 of 3). Those need the validator, and the retry for the model to correct
-   itself. A prompt change cannot replace the check.
+   itself. A prompt change cannot replace the check. With the retry on, h09 was sent back in all 3 runs and
+   the model declined it each time.
 
 ### How far to trust this
 
@@ -189,3 +192,4 @@ results*/             raw records and summaries for every run reported above
 FINDINGS.md           short written summary of the experiments
 tests/                unit tests
 ```
+
