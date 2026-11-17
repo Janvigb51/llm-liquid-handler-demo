@@ -95,3 +95,13 @@ and data/instructions_hard.json (15: 8 executable, 7 to refuse).
 - Sonnet: 8/8 and 7/7 in both runs; validator blocked 0 (h09 and h10 declined by the model).
 - With the old prompt, Haiku was blocked 1, 2, 2 (h09 in 3/3, h10 in 2/3), Sonnet 0.
   Prompt v2 did not change the state-tracking failures on this set.
+
+## 2026-11-17: Haiku, prompt v2, retry on, hard set (3 runs)
+
+Command: `LABBOT_MODEL=claude-haiku-5-5 python run_eval.py --backend llm --simulate --retry --cases data/instructions_hard.json --out results_haiku_prompt2_hard_retry1` (and 2, 3)
+
+- Executable requests correct: 8/8, 8/8, 7/8.
+- Impossible requests handled safely: 7/7 in all three runs.
+- Retried case: h09 in all three runs. It ended as a decline each time.
+- Run 3 miss: h08 produced no tool calls. The model asked whether 120 µL meant 120 µL into each of E1 and E2 or 120 µL in total. The reference answer reads it as 120 µL into each well, and the instruction does not say "each", so the wording is ambiguous. The validator rejected nothing, so retry was not triggered.
+- Without retry (2026-11-05/06 hard-set runs): 8/8 and 7/7 in all three runs, with 1, 1 and 2 cases blocked by the validator.
